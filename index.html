@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNKNOWN 444</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        user-select: none;
+    }
+
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        font-family: Arial, Helvetica, sans-serif;
+        overflow: hidden;
+    }
+
+    .screen {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        color: white;
+    }
+
+    .active {
+        display: flex;
+    }
+
+    /* START SCREEN */
+    #startScreen {
+        background: #000;
+    }
+
+    #startScreen h1 {
+        font-size: 42px;
+        margin-bottom: 15px;
+        letter-spacing: 4px;
+    }
+
+    #startScreen p {
+        color: #888;
+        margin-bottom: 35px;
+    }
+
+    button {
+        border: none;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 16px 32px;
+        border-radius: 8px;
+    }
+
+    #startButton {
+        background: white;
+        color: black;
+    }
+
+    /* CALL */
+    #callScreen {
+        background: #111;
+    }
+
+    .call-number {
+        font-size: 64px;
+        margin-bottom: 15px;
+    }
+
+    .incoming {
+        font-size: 20px;
+        color: #aaa;
+        margin-bottom: 60px;
+    }
+
+    #answerButton {
+        background: #22c55e;
+        color: white;
+        border-radius: 50px;
+        padding: 18px 55px;
+    }
+
+    /* MORSE */
+    #morseScreen {
+        background: #000;
+    }
+
+    .morse-label {
+        color: #777;
+        margin-bottom: 30px;
+        font-size: 16px;
+        letter-spacing: 2px;
+    }
+
+    #morseText {
+        font-family: monospace;
+        font-size: 25px;
+        max-width: 90%;
+        line-height: 1.7;
+    }
+
+    /* FAILURE */
+    #failureScreen {
+        background: #8b0000;
+        animation: failureFlash 0.18s infinite alternate;
+    }
+
+    #failureScreen h1 {
+        font-size: 60px;
+        letter-spacing: 5px;
+    }
+
+    @keyframes failureFlash {
+        from { background: #8b0000; }
+        to { background: #450000; }
+    }
+
+    /* RESET */
+    #resetScreen {
+        background: #000;
+    }
+
+    #resetScreen h1 {
+        font-size: 28px;
+    }
+
+    .reset-bar {
+        width: 70%;
+        max-width: 400px;
+        height: 8px;
+        border: 1px solid #555;
+        margin-top: 30px;
+    }
+
+    .reset-progress {
+        height: 100%;
+        width: 0%;
+        background: white;
+        animation: resetProgress 3s linear forwards;
+    }
+
+    @keyframes resetProgress {
+        to { width: 100%; }
+    }
+
+    /* BOOT */
+    #bootScreen {
+        background: #000;
+    }
+
+    .samsung {
+        font-size: 42px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        animation: bootPulse 2s infinite;
+    }
+
+    .galaxy {
+        margin-top: 12px;
+        font-size: 18px;
+        color: #aaa;
+    }
+
+    @keyframes bootPulse {
+        0%,100% { opacity: .3; }
+        50% { opacity: 1; }
+    }
+
+    /* WARNING */
+    #warningScreen {
+        background: #900;
+        color: white;
+        padding: 30px;
+    }
+
+    #warningScreen h1 {
+        font-size: 38px;
+        margin-bottom: 30px;
+    }
+
+    .arabic {
+        font-size: 28px;
+        direction: rtl;
+        margin: 15px;
+    }
+
+    /* COUNTDOWN */
+    #countdownScreen {
+        background: #900;
+    }
+
+    #countdown {
+        font-size: 130px;
+        font-weight: bold;
+        margin: 20px;
+    }
+
+    /* ERASED */
+    #erasedScreen {
+        background: #000;
+    }
+
+    #erasedScreen h1 {
+        font-size: 45px;
+        color: #d00;
+        letter-spacing: 4px;
+    }
+
+    /* TUX */
+    #tuxScreen {
+        background: #000;
+    }
+
+    .tux {
+        font-size: 110px;
+        margin-bottom: 25px;
+    }
+
+    #tuxScreen h2 {
+        font-family: monospace;
+        font-size: 22px;
+        color: #aaa;
+    }
+
+    .reload {
+        margin-top: 40px;
+        background: #222;
+        color: white;
+        font-size: 15px;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="ringtone" src="ringtone.mp3" preload="auto"></audio>
+
+<!-- START -->
+<div id="startScreen" class="screen active">
+    <h1>UNKNOWN 444</h1>
+    <p>Interactive simulation</p>
+    <button id="startButton">START SIMULATION</button>
+</div>
+
+<!-- CALL -->
+<div id="callScreen" class="screen">
+    <div class="call-number">444</div>
+    <div class="incoming">INCOMING CALL</div>
+    <button id="answerButton">ANSWER</button>
+</div>
+
+<!-- MORSE -->
+<div id="morseScreen" class="screen">
+    <div class="morse-label">UNKNOWN CALL • CONNECTED</div>
+    <div id="morseText"></div>
+</div>
+
+<!-- FAILURE -->
+<div id="failureScreen" class="screen">
+    <h1>SYSTEM FAILURE</h1>
+    <p>Critical system error</p>
+</div>
+
+<!-- RESET -->
+<div id="resetScreen" class="screen">
+    <h1>RESETTING DEVICE...</h1>
+    <div class="reset-bar">
+        <div class="reset-progress"></div>
+    </div>
+</div>
+
+<!-- BOOT -->
+<div id="bootScreen" class="screen">
+    <div class="samsung">SAMSUNG</div>
+    <div class="galaxy">GALAXY S4</div>
+</div>
+
+<!-- WARNING -->
+<div id="warningScreen" class="screen">
+    <h1>⚠ SYSTEM WARNING ⚠</h1>
+
+    <div class="arabic">
+        تحذير: حدث خطأ خطير في النظام
+    </div>
+
+    <div class="arabic">
+        سيتم حذف الجهاز
+    </div>
+</div>
+
+<!-- COUNTDOWN -->
+<div id="countdownScreen" class="screen">
+    <div id="countdown">10</div>
+
+    <div class="arabic">
+        سيتم حذف الجهاز
+    </div>
+</div>
+
+<!-- ERASED -->
+<div id="erasedScreen" class="screen">
+    <h1>DEVICE ERASED</h1>
+    <p>All data has been deleted.</p>
+</div>
+
+<!-- TUX -->
+<div id="tuxScreen" class="screen">
+    <div class="tux">🐧</div>
+    <h2>UNKNOWN 444</h2>
+    <button class="reload" onclick="location.reload()">
+        RESTART SIMULATION
+    </button>
+</div>
+
+
+<script>
+
+const screens = {
+    start: document.getElementById("startScreen"),
+    call: document.getElementById("callScreen"),
+    morse: document.getElementById("morseScreen"),
+    failure: document.getElementById("failureScreen"),
+    reset: document.getElementById("resetScreen"),
+    boot: document.getElementById("bootScreen"),
+    warning: document.getElementById("warningScreen"),
+    countdown: document.getElementById("countdownScreen"),
+    erased: document.getElementById("erasedScreen"),
+    tux: document.getElementById("tuxScreen")
+};
+
+const ringtone = document.getElementById("ringtone");
+const morseText = document.getElementById("morseText");
+
+function show(screen) {
+    Object.values(screens).forEach(s => s.classList.remove("active"));
+    screen.classList.add("active");
+}
+
+/* MORSE */
+const morse = {
+    A: ".-", B: "-...", C: "-.-.", D: "-..", E: ".",
+    F: "..-.", G: "--.", H: "....", I: "..",
+    J: ".---", K: "-.-", L: ".-..", M: "--",
+    N: "-.", O: "---", P: ".--.", Q: "--.-",
+    R: ".-.", S: "...", T: "-", U: "..-",
+    V: "...-", W: ".--", X: "-..-", Y: "-.--",
+    Z: "--..",
+
+    0: "-----", 1: ".----", 2: "..---",
+    3: "...--", 4: "....-", 5: ".....",
+    6: "-....", 7: "--...", 8: "---..",
+    9: "----."
+};
+
+function encodeMorse(text) {
+    return text.toUpperCase()
+        .split("")
+        .map(char => {
+            if (char === " ") return "/";
+            return morse[char] || "";
+        })
+        .join(" ");
+}
+
+
+/* PLAY MORSE */
+
+function playMorse(message, finished) {
+
+    const code = encodeMorse(message);
+
+    morseText.textContent = code;
+
+    const audioContext =
+        new (window.AudioContext || window.webkitAudioContext)();
+
+    let time = audioContext.currentTime + 0.3;
+
+    const dot = 0.10;
+    const dash = 0.30;
+    const gap = 0.10;
+    const letterGap = 0.25;
+    const wordGap = 0.55;
+
+    code.split("").forEach(symbol => {
+
+        if (symbol === ".") {
+            beep(audioContext, time, dot);
+            time += dot + gap;
+
+        } else if (symbol === "-") {
+            beep(audioContext, time, dash);
+            time += dash + gap;
+
+        } else if (symbol === " ") {
+            time += letterGap;
+
+        } else if (symbol === "/") {
+            time += wordGap;
+        }
+    });
+
+    const duration =
+        (time - audioContext.currentTime) * 1000 + 300;
+
+    setTimeout(() => {
+        audioContext.close();
+        finished();
+    }, duration);
+}
+
+
+/* BEEP */
+
+function beep(ctx, start, duration) {
+
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    oscillator.frequency.value = 700;
+    oscillator.type = "sine";
+
+    gain.gain.setValueAtTime(0.15, start);
+    gain.gain.setValueAtTime(0, start + duration);
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.start(start);
+    oscillator.stop(start + duration);
+}
+
+
+/* START SIMULATION */
+
+document.getElementById("startButton").addEventListener("click", async () => {
+
+    try {
+        ringtone.currentTime = 0;
+        await ringtone.play();
+    } catch (error) {
+        console.log("Ringtone could not start:", error);
+    }
+
+    show(screens.call);
+});
+
+
+/* ANSWER */
+
+document.getElementById("answerButton").addEventListener("click", () => {
+
+    ringtone.pause();
+    ringtone.currentTime = 0;
+
+    show(screens.morse);
+
+    playMorse(
+        "Your device has been hacked. Please do not hang up. We are trying to resolve it.",
+        () => {
+
+            /* 5 SECOND SILENCE */
+
+            setTimeout(() => {
+
+                playMorse(
+                    "We have not been able to resolve the problem. Goodbye, and good luck",
+                    () => {
+
+                        /* CALL ENDS */
+
+                        show(screens.failure);
+
+                        setTimeout(() => {
+
+                            /* FAKE RESET */
+
+                            show(screens.reset);
+
+                            setTimeout(() => {
+
+                                /* BOOT */
+
+                                show(screens.boot);
+
+                                setTimeout(() => {
+
+                                    /* WARNING */
+
+                                    show(screens.warning);
+
+                                    setTimeout(() => {
+
+                                        /* COUNTDOWN */
+
+                                        show(screens.countdown);
+
+                                        let number = 10;
+                                        const countdown =
+                                            document.getElementById("countdown");
+
+                                        countdown.textContent = number;
+
+                                        const timer =
+                                            setInterval(() => {
+
+                                                number--;
+
+                                                countdown.textContent =
+                                                    number;
+
+                                                if (number <= 0) {
+
+                                                    clearInterval(timer);
+
+                                                    setTimeout(() => {
+
+                                                        /* FAKE ERASE */
+
+                                                        show(screens.erased);
+
+                                                        setTimeout(() => {
+
+                                                            /* TUX ENDING */
+
+                                                            show(screens.tux);
+
+                                                        }, 2500);
+
+                                                    }, 700);
+                                                }
+
+                                            }, 1000);
+
+                                    }, 3500);
+
+                                }, 5000);
+
+                            }, 3500);
+
+                        }, 1200);
+
+                    }
+                );
+
+            }, 5000);
+
+        }
+    );
+});
+
+</script>
+
+</body>
+</html>
