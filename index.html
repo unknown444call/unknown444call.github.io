@@ -68,17 +68,24 @@
     /* CALL */
     #callScreen {
         background: #111;
+        justify-content: space-between;
+        padding: 60px 20px 35px;
+    }
+
+    .call-info {
+        text-align: center;
+    }
+
+    .call-symbol {
+        font-size: 64px;
+        font-weight: bold;
+        letter-spacing: 4px;
     }
 
     .call-number {
-        font-size: 64px;
-        margin-bottom: 15px;
-    }
-
-    .incoming {
-        font-size: 20px;
-        color: #aaa;
-        margin-bottom: 60px;
+        font-size: 24px;
+        color: #c0c0c0;
+        margin-top: 8px;
     }
 
     #answerButton {
@@ -90,21 +97,32 @@
 
     /* MORSE */
     #morseScreen {
-        background: #000;
+        background: #111;
+        justify-content: space-between;
+        padding: 60px 20px 35px;
     }
 
-    .morse-label {
-        color: #777;
-        margin-bottom: 30px;
-        font-size: 16px;
-        letter-spacing: 2px;
+    #morseScreen .call-info {
+        text-align: center;
     }
 
-    #morseText {
-        font-family: monospace;
-        font-size: 25px;
-        max-width: 90%;
-        line-height: 1.7;
+    #morseScreen .call-symbol {
+        font-size: 64px;
+        font-weight: bold;
+        letter-spacing: 4px;
+    }
+
+    #morseScreen .call-number {
+        font-size: 24px;
+        color: #c0c0c0;
+        margin-top: 8px;
+    }
+
+    #hangupButton {
+        background: #ef4444;
+        color: white;
+        border-radius: 50px;
+        padding: 18px 55px;
     }
 
     /* FAILURE */
@@ -253,15 +271,26 @@
 
 <!-- CALL -->
 <div id="callScreen" class="screen">
-    <div class="call-number">444</div>
-    <div class="incoming">INCOMING CALL</div>
+
+    <div class="call-info">
+        <div class="call-symbol">%@@</div>
+        <div class="call-number">444</div>
+    </div>
+
     <button id="answerButton">ANSWER</button>
+
 </div>
 
-<!-- MORSE -->
+<!-- MORSE / CONNECTED CALL -->
 <div id="morseScreen" class="screen">
-    <div class="morse-label">UNKNOWN CALL • CONNECTED</div>
-    <div id="morseText"></div>
+
+    <div class="call-info">
+        <div class="call-symbol">%@@</div>
+        <div class="call-number">444</div>
+    </div>
+
+    <button id="hangupButton">HANG UP</button>
+
 </div>
 
 <!-- FAILURE -->
@@ -321,7 +350,6 @@
     </button>
 </div>
 
-
 <script>
 
 const screens = {
@@ -338,14 +366,15 @@ const screens = {
 };
 
 const ringtone = document.getElementById("ringtone");
-const morseText = document.getElementById("morseText");
 
 function show(screen) {
     Object.values(screens).forEach(s => s.classList.remove("active"));
     screen.classList.add("active");
 }
 
+
 /* MORSE */
+
 const morse = {
     A: ".-", B: "-...", C: "-.-.", D: "-..", E: ".",
     F: "..-.", G: "--.", H: "....", I: "..",
@@ -361,12 +390,17 @@ const morse = {
     9: "----."
 };
 
+
 function encodeMorse(text) {
+
     return text.toUpperCase()
         .split("")
         .map(char => {
+
             if (char === " ") return "/";
+
             return morse[char] || "";
+
         })
         .join(" ");
 }
@@ -377,8 +411,6 @@ function encodeMorse(text) {
 function playMorse(message, finished) {
 
     const code = encodeMorse(message);
-
-    morseText.textContent = code;
 
     const audioContext =
         new (window.AudioContext || window.webkitAudioContext)();
@@ -394,27 +426,34 @@ function playMorse(message, finished) {
     code.split("").forEach(symbol => {
 
         if (symbol === ".") {
+
             beep(audioContext, time, dot);
             time += dot + gap;
 
         } else if (symbol === "-") {
+
             beep(audioContext, time, dash);
             time += dash + gap;
 
         } else if (symbol === " ") {
+
             time += letterGap;
 
         } else if (symbol === "/") {
+
             time += wordGap;
         }
+
     });
 
     const duration =
         (time - audioContext.currentTime) * 1000 + 300;
 
     setTimeout(() => {
+
         audioContext.close();
         finished();
+
     }, duration);
 }
 
@@ -445,10 +484,14 @@ function beep(ctx, start, duration) {
 document.getElementById("startButton").addEventListener("click", async () => {
 
     try {
+
         ringtone.currentTime = 0;
         await ringtone.play();
+
     } catch (error) {
+
         console.log("Ringtone could not start:", error);
+
     }
 
     show(screens.call);
@@ -465,7 +508,9 @@ document.getElementById("answerButton").addEventListener("click", () => {
     show(screens.morse);
 
     playMorse(
+
         "Your device has been hacked. Please do not hang up. We are trying to resolve it.",
+
         () => {
 
             /* 5 SECOND SILENCE */
@@ -473,7 +518,9 @@ document.getElementById("answerButton").addEventListener("click", () => {
             setTimeout(() => {
 
                 playMorse(
+
                     "We have not been able to resolve the problem. Goodbye, and good luck",
+
                     () => {
 
                         /* CALL ENDS */
@@ -505,6 +552,7 @@ document.getElementById("answerButton").addEventListener("click", () => {
                                         show(screens.countdown);
 
                                         let number = 10;
+
                                         const countdown =
                                             document.getElementById("countdown");
 
@@ -556,6 +604,15 @@ document.getElementById("answerButton").addEventListener("click", () => {
 
         }
     );
+});
+
+
+/* HANG UP */
+
+document.getElementById("hangupButton").addEventListener("click", () => {
+
+    location.reload();
+
 });
 
 </script>
