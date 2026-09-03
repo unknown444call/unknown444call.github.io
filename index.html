@@ -273,7 +273,7 @@
 <!-- AUDIO -->
 <audio id="ringtone" src="ringtone.mp3" preload="auto"></audio>
 <audio id="startupMusic" src="startup.mp3" preload="auto"></audio>
-   
+<audio id="startupUnlock" src="startup.mp3" preload="auto"></audio>
 <!-- START -->
 <div id="startScreen" class="screen active">
     <h1>UNKNOWN 444</h1>
@@ -383,7 +383,8 @@ const screens = {
     erased: document.getElementById("erasedScreen"),
     tux: document.getElementById("tuxScreen")
 };
-
+   
+const startupMusic = document.getElementById("startupMusic");
 const ringtone = document.getElementById("ringtone");
 
 function show(screen) {
@@ -497,7 +498,6 @@ function beep(ctx, start, duration) {
     oscillator.stop(start + duration);
 }
 
-
 /* START SIMULATION */
 
 document.getElementById("startButton").addEventListener("click", async () => {
@@ -507,14 +507,22 @@ document.getElementById("startButton").addEventListener("click", async () => {
         ringtone.currentTime = 0;
         await ringtone.play();
 
+        // Unlock startup sound for iPhone/iPad
+        startupMusic.volume = 0;
+        await startupMusic.play();
+        startupMusic.pause();
+        startupMusic.currentTime = 0;
+        startupMusic.volume = 1;
+
     } catch (error) {
 
-        console.log("Ringtone could not start:", error);
+        console.log("Audio could not start:", error);
 
     }
 
     show(screens.call);
 });
+
 
 
 /* ANSWER */
