@@ -171,27 +171,37 @@
     }
 
     /* BOOT */
-    #bootScreen {
-        background: #000;
-    }
+/* BOOT */
+#bootScreen {
+    background: #000;
+    justify-content: center;
+}
 
-    .samsung {
-        font-size: 42px;
-        font-weight: bold;
-        letter-spacing: 3px;
-        animation: bootPulse 2s infinite;
-    }
+.galaxy-s4 {
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: white;
+}
 
-    .galaxy {
-        margin-top: 12px;
-        font-size: 18px;
-        color: #aaa;
-    }
+.powered {
+    position: absolute;
+    bottom: 45px;
+    font-size: 15px;
+    color: #aaa;
+}
 
-    @keyframes bootPulse {
-        0%,100% { opacity: .3; }
-        50% { opacity: 1; }
-    }
+.samsung {
+    font-size: 42px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    animation: bootPulse 2s infinite;
+}
+
+@keyframes bootPulse {
+    0%,100% { opacity: .3; }
+    50% { opacity: 1; }
+}
 
     /* WARNING */
     #warningScreen {
@@ -310,10 +320,17 @@
 
 <!-- BOOT -->
 <div id="bootScreen" class="screen">
-    <div class="samsung">SAMSUNG</div>
-    <div class="galaxy">GALAXY S4</div>
-</div>
 
+    <div id="galaxyBoot">
+        <div class="galaxy-s4">GALAXY S4</div>
+        <div class="powered">powered by Android 🤖</div>
+    </div>
+
+    <div id="samsungBoot" style="display:none;">
+        <div class="samsung">SAMSUNG</div>
+    </div>
+
+</div>
 <!-- WARNING -->
 <div id="warningScreen" class="screen">
     <h1>⚠ SYSTEM WARNING ⚠</h1>
@@ -540,7 +557,21 @@ document.getElementById("answerButton").addEventListener("click", () => {
 
                                 show(screens.boot);
 
-                                setTimeout(() => {
+document.getElementById("galaxyBoot").style.display = "block";
+document.getElementById("samsungBoot").style.display = "none";
+
+setTimeout(() => {
+
+    document.getElementById("galaxyBoot").style.display = "none";
+    document.getElementById("samsungBoot").style.display = "block";
+
+    setTimeout(() => {
+        show(screens.warning);
+    }, 5000);
+
+}, 2500);
+
+                           
 
                                     /* WARNING */
 
