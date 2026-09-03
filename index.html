@@ -519,6 +519,8 @@ document.getElementById("startButton").addEventListener("click", async () => {
 
 /* ANSWER */
 
+/* ANSWER */
+
 document.getElementById("answerButton").addEventListener("click", () => {
 
     ringtone.pause();
@@ -527,9 +529,7 @@ document.getElementById("answerButton").addEventListener("click", () => {
     show(screens.morse);
 
     playMorse(
-
         "Please help me",
-
         () => {
 
             /* 5 SECOND SILENCE */
@@ -537,9 +537,7 @@ document.getElementById("answerButton").addEventListener("click", () => {
             setTimeout(() => {
 
                 playMorse(
-
                     "Please help me",
-
                     () => {
 
                         /* CALL ENDS */
@@ -558,67 +556,65 @@ document.getElementById("answerButton").addEventListener("click", () => {
 
                                 show(screens.boot);
 
-document.getElementById("galaxyBoot").style.display = "block";
-document.getElementById("samsungBoot").style.display = "none";
+                                const galaxyBoot =
+                                    document.getElementById("galaxyBoot");
 
-setTimeout(() => {
+                                const samsungBoot =
+                                    document.getElementById("samsungBoot");
 
-    document.getElementById("galaxyBoot").style.display = "none";
-    document.getElementById("samsungBoot").style.display = "block";
+                                const startupMusic =
+                                    document.getElementById("startupMusic");
 
-    show(screens.boot);
+                                /* GALAXY S4 SCREEN */
 
-document.getElementById("galaxyBoot").style.display = "block";
-document.getElementById("samsungBoot").style.display = "none";
+                                galaxyBoot.style.display = "block";
+                                samsungBoot.style.display = "none";
 
-setTimeout(() => {
+                                setTimeout(() => {
 
-    document.getElementById("galaxyBoot").style.display = "none";
-    document.getElementById("samsungBoot").style.display = "block";
+                                    /* SAMSUNG LOGO */
 
-    const startupMusic = document.getElementById("startupMusic");
-    startupMusic.currentTime = 0;
-    startupMusic.play();
+                                    galaxyBoot.style.display = "none";
+                                    samsungBoot.style.display = "block";
 
-    setTimeout(() => {
-        startupMusic.pause();
-        startupMusic.currentTime = 0;
+                                    /* START SAMSUNG MUSIC */
 
-        show(screens.warning);
-    }, 5000);
-
-}, 2500);
-      
-    }, 5000);
-
-}, 2500);
-
-                           
-
-                                    /* WARNING */
-
-                                    show(screens.warning);
+                                    startupMusic.currentTime = 0;
+                                    startupMusic.play().catch(error => {
+                                        console.log(
+                                            "Startup music could not start:",
+                                            error
+                                        );
+                                    });
 
                                     setTimeout(() => {
 
-                                        /* COUNTDOWN */
+                                        /* STOP MUSIC */
 
-                                        show(screens.countdown);
+                                        startupMusic.pause();
+                                        startupMusic.currentTime = 0;
 
-                                        let number = 10;
+                                        /* WARNING */
 
-                                        const countdown =
-                                            document.getElementById("countdown");
+                                        show(screens.warning);
 
-                                        countdown.textContent = number;
+                                        setTimeout(() => {
 
-                                        const timer =
-                                            setInterval(() => {
+                                            /* COUNTDOWN */
+
+                                            show(screens.countdown);
+
+                                            let number = 10;
+
+                                            const countdown =
+                                                document.getElementById("countdown");
+
+                                            countdown.textContent = number;
+
+                                            const timer = setInterval(() => {
 
                                                 number--;
-
-                                                countdown.textContent =
-                                                    number;
+                                                countdown.textContent = number;
 
                                                 if (number <= 0) {
 
@@ -643,9 +639,11 @@ setTimeout(() => {
 
                                             }, 1000);
 
-                                    }, 3500);
+                                        }, 3500);
 
-                                }, 5000);
+                                    }, 5000);
+
+                                }, 2500);
 
                             }, 3500);
 
@@ -659,7 +657,6 @@ setTimeout(() => {
         }
     );
 });
-
 
 /* HANG UP */
 
