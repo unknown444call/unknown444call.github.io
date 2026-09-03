@@ -272,7 +272,7 @@
 
 <!-- AUDIO -->
 <audio id="ringtone" src="ringtone.mp3" preload="auto"></audio>
-
+<audio id="startupMusic" src="startup.mp3" preload="auto"></audio>
 <!-- START -->
 <div id="startScreen" class="screen active">
     <h1>UNKNOWN 444</h1>
@@ -565,8 +565,29 @@ setTimeout(() => {
     document.getElementById("galaxyBoot").style.display = "none";
     document.getElementById("samsungBoot").style.display = "block";
 
+    show(screens.boot);
+
+document.getElementById("galaxyBoot").style.display = "block";
+document.getElementById("samsungBoot").style.display = "none";
+
+setTimeout(() => {
+
+    document.getElementById("galaxyBoot").style.display = "none";
+    document.getElementById("samsungBoot").style.display = "block";
+
+    const startupMusic = document.getElementById("startupMusic");
+    startupMusic.currentTime = 0;
+    startupMusic.play();
+
     setTimeout(() => {
+        startupMusic.pause();
+        startupMusic.currentTime = 0;
+
         show(screens.warning);
+    }, 5000);
+
+}, 2500);
+      
     }, 5000);
 
 }, 2500);
